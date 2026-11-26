@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { actions, useData } from "@/lib/store";
 import { CATEGORIES, catLabel, money } from "@/lib/format";
 import { pageHead } from "@/lib/head";
+import { PRODUCT_IMAGES } from "@/lib/product-images";
 import type { Category, Product } from "@/lib/types";
 import { Chips, Empty, fieldCls, PageHeader, StockBadge, Thumb } from "@/components/crm/ui";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -50,10 +51,10 @@ function Products() {
       {view === "grid" ? (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {list.map((p, i) => (
-            <button key={p.id} onClick={() => setEdit(p)} className="animate-rise overflow-hidden rounded-2xl border bg-card text-left shadow-soft transition hover:-translate-y-0.5 hover:shadow-glow" style={{ animationDelay: `${Math.min(i, 12) * 25}ms` }}>
-              <div className="relative"><Thumb src={p.image} alt={p.name} className="aspect-square w-full" /><span className="absolute left-2 top-2"><StockBadge p={p} /></span></div>
+            <button key={p.id} onClick={() => setEdit(p)} className="flex animate-rise flex-col overflow-hidden rounded-2xl border bg-card text-left shadow-soft transition hover:-translate-y-0.5 hover:shadow-glow" style={{ animationDelay: `${Math.min(i, 12) * 25}ms` }}>
+              <div className="relative border-b"><Thumb src={p.image} alt={p.name} className="aspect-square w-full" /><span className="absolute left-2 top-2"><StockBadge p={p} /></span></div>
               <div className="p-3">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{p.brand}</div>
+                <div className="truncate text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{p.brand}</div>
                 <div className="line-clamp-2 min-h-10 text-sm font-semibold leading-5">{p.name}</div>
                 <div className="mt-2 font-extrabold">{money(p.price)}</div>
                 <div className="text-xs text-success">+{Math.round(((p.price - p.cost) / (p.cost || 1)) * 100)}% наценка</div>
@@ -90,7 +91,7 @@ function ProductSheet({ value, onClose }: { value: (Omit<Product, "id"> & { id?:
 
   const save = () => {
     if (!f.name.trim() || f.price <= 0) { toast.error("Укажите название и цену"); return; }
-    actions.saveProduct({ ...f, specs: specs.split(",").map((s) => s.trim()).filter(Boolean), image: f.image || "https://images.pexels.com/photos/7508684/pexels-photo-7508684.jpeg?auto=compress&cs=tinysrgb&w=600" });
+    actions.saveProduct({ ...f, specs: specs.split(",").map((s) => s.trim()).filter(Boolean), image: f.image || PRODUCT_IMAGES[0] || "" });
     toast.success(f.id ? "Товар сохранён" : "Товар добавлен");
     onClose();
   };

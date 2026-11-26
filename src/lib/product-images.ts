@@ -1,0 +1,27 @@
+import p1 from "@/assets/products/p1.jpg.asset.json";
+import p2 from "@/assets/products/p2.jpg.asset.json";
+import p3 from "@/assets/products/p3.jpg.asset.json";
+import p4 from "@/assets/products/p4.jpg.asset.json";
+import p5 from "@/assets/products/p5.jpg.asset.json";
+import p6 from "@/assets/products/p6.jpg.asset.json";
+import p7 from "@/assets/products/p7.jpg.asset.json";
+import p8 from "@/assets/products/p8.jpg.asset.json";
+import p9 from "@/assets/products/p9.jpg.asset.json";
+import p10 from "@/assets/products/p10.jpg.asset.json";
+import p11 from "@/assets/products/p11.jpg.asset.json";
+import p12 from "@/assets/products/p12.jpg.asset.json";
+import p13 from "@/assets/products/p13.jpg.asset.json";
+import p14 from "@/assets/products/p14.jpg.asset.json";
+import p15 from "@/assets/products/p15.jpg.asset.json";
+import p16 from "@/assets/products/p16.jpg.asset.json";
+import p17 from "@/assets/products/p17.jpg.asset.json";
+import p18 from "@/assets/products/p18.jpg.asset.json";
+import p19 from "@/assets/products/p19.jpg.asset.json";
+import p20 from "@/assets/products/p20.jpg.asset.json";
+import p21 from "@/assets/products/p21.jpg.asset.json";
+import p22 from "@/assets/products/p22.jpg.asset.json";
+import p23 from "@/assets/products/p23.jpg.asset.json";
+import p24 from "@/assets/products/p24.jpg.asset.json";
+import p25 from "@/assets/products/p25.jpg.asset.json";
+
+export const PRODUCT_IMAGES: string[] = [p1.url, p2.url, p3.url, p4.url, p5.url, p6.url, p7.url, p8.url, p9.url, p10.url, p11.url, p12.url, p13.url, p14.url, p15.url, p16.url, p17.url, p18.url, p19.url, p20.url, p21.url, p22.url, p23.url, p24.url, p25.url];

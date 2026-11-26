@@ -3,7 +3,7 @@ import { createSeed } from "./seed";
 import { uid } from "./format";
 import type { Customer, Payment, Product, SaleItem, State } from "./types";
 
-const KEY = "moysklad:data:v1";
+const KEY = "moysklad:data:v2";
 let state: State | null = null;
 const listeners = new Set<() => void>();
 

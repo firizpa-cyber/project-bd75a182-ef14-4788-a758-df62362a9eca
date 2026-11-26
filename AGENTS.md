@@ -32,4 +32,6 @@ use the editor.
 ## Project rules
 - Frontend-only phase: all data lives in `src/lib/store.ts` (useSyncExternalStore + localStorage), seeded from `src/lib/seed.ts`. Why: user asked for no backend yet; swap the store for Cloud later.
 - Mock auth in `src/lib/auth.ts`; `AppShell` gates every page and renders only after hydration. Why: session is in localStorage, avoids SSR mismatch.
+- Product photos are CDN assets in `src/assets/products` (white square), listed in `src/lib/product-images.ts`; cards show them with object-contain on white. Why: uniform card look.
+- Bump the store key version in `store.ts` when seed data changes. Why: old localStorage would hide new seed.
 - Currency comes from `CURRENCY` in `src/lib/format.ts`; never hard-code it in components.

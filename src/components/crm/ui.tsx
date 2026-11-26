@@ -47,8 +47,8 @@ export function StockBadge({ p }: { p: Pick<Product, "stock" | "minStock"> }) {
 
 export function Thumb({ src, alt, className }: { src: string; alt: string; className?: string }) {
   return (
-    <div className={cn("overflow-hidden bg-muted", className)}>
-      <img src={src} alt={alt} loading="lazy" className="size-full object-cover" />
+    <div className={cn("overflow-hidden bg-white", className)}>
+      <img src={src} alt={alt} loading="lazy" className="size-full object-contain p-[6%]" />
     </div>
   );
 }

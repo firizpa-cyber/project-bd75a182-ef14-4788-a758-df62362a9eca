@@ -10,7 +10,7 @@ export interface User {
 }
 
 export const USERS: User[] = [
-  { id: "admin", login: "admin", password: "admin123", name: "Фируз Юсупов", role: "admin" },
+  { id: "admin", login: "admin", password: "admin123", name: "Нодирчон", role: "admin" },
   { id: "manager", login: "manager", password: "manager123", name: "Мадина Саидова", role: "manager" },
   { id: "cashier", login: "kassa", password: "kassa123", name: "Рустам Назаров", role: "cashier" },
 ];
