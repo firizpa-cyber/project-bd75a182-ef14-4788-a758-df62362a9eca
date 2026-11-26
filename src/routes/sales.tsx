@@ -9,6 +9,7 @@ import type { Sale } from "@/lib/types";
 import { Chips, Empty, PageHeader, Stat } from "@/components/crm/ui";
 import { BottomSheet } from "@/components/crm/BottomSheet";
 import { cn } from "@/lib/utils";
+import { ReceiptActions } from "@/components/crm/Receipt";
 
 export const Route = createFileRoute("/sales")({
   head: () => pageHead("Продажи", "История продаж и возвраты"),
@@ -82,6 +83,7 @@ function Sales() {
               </div>
               {open.discount > 0 && <div className="flex justify-between text-sm"><span>Скидка</span><span>−{money(open.discount)}</span></div>}
               <div className="flex justify-between text-xl font-extrabold"><span>Итого</span><span>{money(open.total)}</span></div>
+              <ReceiptActions sale={open} />
               {!open.cancelled ? (
                 <button onClick={() => { actions.cancelSale(open.id); toast.success("Возврат оформлен, товар вернулся на склад"); setOpen(null); }} className="flex h-12 items-center justify-center gap-2 rounded-xl border font-bold text-destructive"><RotateCcw className="size-4" /> Оформить возврат</button>
               ) : <p className="text-center text-sm font-semibold text-destructive">Возврат оформлен</p>}

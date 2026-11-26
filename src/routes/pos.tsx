@@ -11,6 +11,7 @@ import type { Category, Payment, SaleItem } from "@/lib/types";
 import { Chips, Empty, fieldCls, Thumb } from "@/components/crm/ui";
 import { BottomSheet } from "@/components/crm/BottomSheet";
 import { cn } from "@/lib/utils";
+import { ReceiptActions } from "@/components/crm/Receipt";
 
 export const Route = createFileRoute("/pos")({
   head: () => pageHead("Касса", "Быстрая продажа товаров"),
@@ -152,6 +153,7 @@ function Pos() {
           <div className="mx-auto flex size-16 animate-rise items-center justify-center rounded-full bg-success-soft text-success"><CheckCircle2 className="size-9" /></div>
           <p className="text-lg font-bold">Продажа №{done?.number}</p>
           <p className="text-3xl font-extrabold">{money(done?.total ?? 0)}</p>
+          {(() => { const s = data.sales.find((x) => x.number === done?.number); return s ? <ReceiptActions sale={s} /> : null; })()}
           <button onClick={() => setDone(null)} className="mt-2 h-12 rounded-xl bg-primary font-bold text-primary-foreground">Новая продажа</button>
       </BottomSheet>
     </div>
