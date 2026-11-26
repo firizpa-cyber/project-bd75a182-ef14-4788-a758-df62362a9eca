@@ -1,4 +1,6 @@
-import { Printer, Send, MessageCircle } from "lucide-react";
+import { useState } from "react";
+import { Loader2, Printer, Send, MessageCircle } from "lucide-react";
+import { toast } from "sonner";
 import { USERS } from "@/lib/auth";
 import { dateTime, money, payLabel } from "@/lib/format";
 import { useData } from "@/lib/store";
@@ -46,19 +48,42 @@ ${seller ? `<tr><td>Продавец</td><td class=r>${esc(seller)}</td></tr>` :
   w.document.close();
 }
 
-/** Paper-style receipt preview + print / WhatsApp / Telegram actions. */
+/** Print + share the receipt as a branded PDF (WhatsApp / Telegram via the phone share sheet). */
 export function ReceiptActions({ sale }: { sale: Sale }) {
   const data = useData();
+  const [busy, setBusy] = useState<string | null>(null);
   const cust = data.customers.find((c) => c.id === sale.customerId);
   const seller = USERS.find((u) => u.id === sale.userId)?.name;
-  const text = receiptText(sale, cust?.name);
   const phone = cust?.phone.replace(/\D/g, "") ?? "";
-  const btn = "flex h-12 flex-col items-center justify-center gap-0.5 rounded-xl border bg-card text-xs font-bold transition active:scale-95";
+
+  const share = async (app: "wa" | "tg") => {
+    setBusy(app);
+    try {
+      const { buildReceiptPdf } = await import("@/lib/receipt-pdf");
+      const file = await buildReceiptPdf(sale, cust?.name);
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: file.name }).catch(() => {});
+        return;
+      }
+      // Desktop: download the PDF and open the messenger so it can be attached.
+      const url = URL.createObjectURL(file);
+      const a = document.createElement("a"); a.href = url; a.download = file.name; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      window.open(app === "wa" ? `https://wa.me/${phone}` : "https://web.telegram.org/", "_blank");
+      toast.success("PDF чека скачан — прикрепите его в чате");
+    } catch {
+      toast.error("Не удалось создать PDF");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const btn = "flex h-12 flex-col items-center justify-center gap-0.5 rounded-xl border bg-card text-xs font-bold transition active:scale-95 disabled:opacity-60";
   return (
     <div className="grid grid-cols-3 gap-2">
       <button onClick={() => printReceipt(sale, cust?.name, seller)} className={btn}><Printer className="size-4" />Печать</button>
-      <a href={`https://wa.me/${phone}?text=${encodeURIComponent(text)}`} target="_blank" rel="noreferrer" className={`${btn} text-[#25D366]`}><MessageCircle className="size-4" />WhatsApp</a>
-      <a href={`https://t.me/share/url?url=${encodeURIComponent(SHOP)}&text=${encodeURIComponent(text)}`} target="_blank" rel="noreferrer" className={`${btn} text-[#229ED9]`}><Send className="size-4" />Telegram</a>
+      <button disabled={!!busy} onClick={() => share("wa")} className={`${btn} text-[#25D366]`}>{busy === "wa" ? <Loader2 className="size-4 animate-spin" /> : <MessageCircle className="size-4" />}WhatsApp PDF</button>
+      <button disabled={!!busy} onClick={() => share("tg")} className={`${btn} text-[#229ED9]`}>{busy === "tg" ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}Telegram PDF</button>
     </div>
   );
 }
