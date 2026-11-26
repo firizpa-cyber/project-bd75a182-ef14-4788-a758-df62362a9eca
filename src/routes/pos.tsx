@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { Banknote, CheckCircle2, CreditCard, Minus, Plus, Search, ShoppingCart, Smartphone, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { actions, useData } from "@/lib/store";
@@ -135,11 +136,14 @@ function Pos() {
         <div className="h-[calc(100%-2.5rem)]">{cartView}</div>
       </aside>
 
-      {count > 0 && (
-        <button onClick={() => setOpen(true)} className="fixed inset-x-4 bottom-20 z-20 flex h-14 animate-rise items-center justify-between rounded-2xl bg-gradient-primary px-5 font-bold text-primary-foreground shadow-glow lg:hidden">
-          <span className="flex items-center gap-2"><ShoppingCart className="size-5" /> {count} шт</span><span>{money(total)}</span>
-        </button>
-      )}
+      {/* Портал в body: внутри main с animate-rise position:fixed не работает */}
+      {count > 0 &&
+        createPortal(
+          <button onClick={() => setOpen(true)} className="fixed inset-x-4 bottom-20 z-40 flex h-14 animate-rise items-center justify-between rounded-2xl bg-gradient-primary px-5 font-bold text-primary-foreground shadow-glow lg:hidden">
+            <span className="flex items-center gap-2"><ShoppingCart className="size-5" /> {count} шт</span><span>{money(total)}</span>
+          </button>,
+          document.body,
+        )}
       <BottomSheet open={open} onClose={() => setOpen(false)} title={`Чек · ${count} шт`}>
         <div className="h-[70dvh]">{cartView}</div>
       </BottomSheet>
