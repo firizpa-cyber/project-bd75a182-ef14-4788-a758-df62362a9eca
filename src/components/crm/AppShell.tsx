@@ -5,7 +5,7 @@ import { logout, ROLE_LABEL, useUser } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { Login } from "./Login";
 import { ThemeButton } from "./ThemeButton";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { BottomSheet } from "./BottomSheet";
 
 const NAV = [
   { to: "/", label: "Главная", icon: LayoutGrid },
@@ -108,10 +108,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           </button>
         </div>
       </nav>
-      <Sheet open={more} onOpenChange={setMore}>
-        <SheetContent side="bottom" className="rounded-t-3xl">
-          <SheetHeader><SheetTitle>Разделы</SheetTitle></SheetHeader>
-          <div className="grid grid-cols-3 gap-3 p-4 pt-0">
+      <BottomSheet open={more} onClose={() => setMore(false)} title="Разделы">
+          <div className="grid grid-cols-3 gap-3">
             {[NAV[4], NAV[5], NAV[6]].map((n) => (
               <Link key={n.to} to={n.to} onClick={() => setMore(false)} className="flex flex-col items-center gap-2 rounded-2xl border bg-card p-4 text-sm font-semibold">
                 <span className="flex size-11 items-center justify-center rounded-xl bg-accent text-accent-foreground"><n.icon className="size-5" /></span>
@@ -119,8 +117,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Link>
             ))}
           </div>
-        </SheetContent>
-      </Sheet>
+      </BottomSheet>
     </div>
   );
 }

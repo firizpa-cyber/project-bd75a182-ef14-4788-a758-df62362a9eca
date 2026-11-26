@@ -7,7 +7,7 @@ import { dateShort, money } from "@/lib/format";
 import { pageHead } from "@/lib/head";
 import type { Customer } from "@/lib/types";
 import { Empty, fieldCls, PageHeader } from "@/components/crm/ui";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { BottomSheet } from "@/components/crm/BottomSheet";
 
 export const Route = createFileRoute("/customers")({
   head: () => pageHead("Клиенты", "База клиентов и история покупок"),
@@ -69,11 +69,9 @@ function CustomerDialog({ value, onClose }: { value: Draft | Customer | null; on
   const [prev, setPrev] = useState(value);
   if (prev !== value) { setPrev(value); setF(value); }
   return (
-    <Dialog open={!!value} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="rounded-3xl">
+    <BottomSheet open={!!value} onClose={onClose} title={f?.id ? "Клиент" : "Новый клиент"}>
         {f && (
           <>
-            <DialogTitle className="text-xl font-extrabold">{f.id ? "Клиент" : "Новый клиент"}</DialogTitle>
             <input className={fieldCls} placeholder="Имя или компания" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
             <input className={fieldCls} type="tel" placeholder="Телефон" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} />
             <input className={fieldCls} placeholder="Заметка" value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} />
@@ -83,7 +81,6 @@ function CustomerDialog({ value, onClose }: { value: Draft | Customer | null; on
             </div>
           </>
         )}
-      </DialogContent>
-    </Dialog>
+    </BottomSheet>
   );
 }

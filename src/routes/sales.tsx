@@ -7,7 +7,7 @@ import { dateTime, money, payLabel } from "@/lib/format";
 import { pageHead } from "@/lib/head";
 import type { Sale } from "@/lib/types";
 import { Chips, Empty, PageHeader, Stat } from "@/components/crm/ui";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { BottomSheet } from "@/components/crm/BottomSheet";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/sales")({
@@ -64,11 +64,9 @@ function Sales() {
         </div>
       )}
 
-      <Dialog open={!!open} onOpenChange={() => setOpen(null)}>
-        <DialogContent className="rounded-3xl">
+      <BottomSheet open={!!open} onClose={() => setOpen(null)} title={`Чек №${open?.number ?? ""}`}>
           {open && (
             <>
-              <DialogTitle className="text-xl font-extrabold">Чек №{open.number}</DialogTitle>
               <div className="flex flex-wrap gap-2 text-xs">
                 <span className="rounded-full bg-muted px-2.5 py-1 font-semibold">{dateTime(open.date)}</span>
                 <span className="rounded-full bg-muted px-2.5 py-1 font-semibold">{payLabel(open.payment)}</span>
@@ -89,8 +87,7 @@ function Sales() {
               ) : <p className="text-center text-sm font-semibold text-destructive">Возврат оформлен</p>}
             </>
           )}
-        </DialogContent>
-      </Dialog>
+      </BottomSheet>
     </div>
   );
 }

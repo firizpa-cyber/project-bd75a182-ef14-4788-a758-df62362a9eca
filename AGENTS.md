@@ -34,4 +34,5 @@ use the editor.
 - Mock auth in `src/lib/auth.ts`; `AppShell` gates every page and renders only after hydration. Why: session is in localStorage, avoids SSR mismatch.
 - Product photos are CDN assets in `src/assets/products` (white square), listed in `src/lib/product-images.ts`; cards show them with object-contain on white. Why: uniform card look.
 - Bump the store key version in `store.ts` when seed data changes. Why: old localStorage would hide new seed.
+- All dialogs use `src/components/crm/BottomSheet.tsx` (slides up from the bottom, swipe to close); never use centered Dialog or side Sheet. Why: user wants one modern bottom-sheet style.
 - Currency comes from `CURRENCY` in `src/lib/format.ts`; never hard-code it in components.

@@ -8,8 +8,7 @@ import { pageHead } from "@/lib/head";
 import { PRODUCT_IMAGES } from "@/lib/product-images";
 import type { Category, Product } from "@/lib/types";
 import { Chips, Empty, fieldCls, PageHeader, StockBadge, Thumb } from "@/components/crm/ui";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { BottomSheet } from "@/components/crm/BottomSheet";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/products")({
@@ -85,7 +84,7 @@ function ProductSheet({ value, onClose }: { value: (Omit<Product, "id"> & { id?:
   const [specs, setSpecs] = useState("");
   const [prevValue, setPrevValue] = useState(value);
   if (value !== prevValue) { setPrevValue(value); setF(value); setSpecs(value?.specs.join(", ") ?? ""); }
-  if (!f) return <Sheet open={false} />;
+  if (!f) return null;
   const upd = <K extends keyof Product>(k: K, v: Product[K]) => setF({ ...f, [k]: v });
   const margin = f.price - f.cost;
 
@@ -99,11 +98,9 @@ function ProductSheet({ value, onClose }: { value: (Omit<Product, "id"> & { id?:
   const field = (label: string, el: React.ReactNode) => <label className="block"><span className="mb-1.5 block text-xs font-semibold text-muted-foreground">{label}</span>{el}</label>;
 
   return (
-    <Sheet open={!!value} onOpenChange={(o) => !o && onClose()}>
-      <SheetContent className="w-full overflow-y-auto p-0 sm:max-w-md">
-        {f.image && <Thumb src={f.image} alt={f.name} className="aspect-[16/9] w-full" />}
-        <div className="space-y-4 p-5">
-          <SheetHeader className="p-0"><SheetTitle className="text-xl">{f.id ? "Карточка товара" : "Новый товар"}</SheetTitle></SheetHeader>
+    <BottomSheet open={!!value} onClose={onClose} title={f.id ? "Карточка товара" : "Новый товар"} wide>
+        {f.image && <Thumb src={f.image} alt={f.name} className="mx-auto aspect-square w-40 shrink-0 rounded-2xl border" />}
+        <div className="space-y-4">
           {f.id && f.specs.length > 0 && <div className="flex flex-wrap gap-1.5">{f.specs.map((s) => <span key={s} className="rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-accent-foreground">{s}</span>)}</div>}
           {field("Название", <input className={fieldCls} value={f.name} onChange={(e) => upd("name", e.target.value)} />)}
           <div className="grid grid-cols-2 gap-3">
@@ -131,8 +128,7 @@ function ProductSheet({ value, onClose }: { value: (Omit<Product, "id"> & { id?:
             <button onClick={save} className="h-12 flex-1 rounded-xl bg-gradient-primary font-bold text-primary-foreground shadow-glow">Сохранить</button>
           </div>
         </div>
-      </SheetContent>
-    </Sheet>
+    </BottomSheet>
   );
 }
 
@@ -141,9 +137,7 @@ function RepriceDialog({ open, onClose, products }: { open: boolean; onClose: ()
   const [pct, setPct] = useState(5);
   const ids = products.filter((p) => cat === "all" || p.category === cat).map((p) => p.id);
   return (
-    <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="rounded-3xl">
-        <DialogTitle className="text-xl font-extrabold">Изменить цены</DialogTitle>
+    <BottomSheet open={open} onClose={onClose} title="Изменить цены">
         <select className={fieldCls} value={cat} onChange={(e) => setCat(e.target.value as Category | "all")}>
           <option value="all">Все товары</option>
           {CATEGORIES.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
@@ -154,7 +148,6 @@ function RepriceDialog({ open, onClose, products }: { open: boolean; onClose: ()
         <input className={fieldCls} type="number" value={pct} onChange={(e) => setPct(Number(e.target.value))} aria-label="Процент" />
         <p className="text-sm text-muted-foreground">Затронет {ids.length} товаров. Цены округлятся до 5 смн.</p>
         <button onClick={() => { actions.repriceBy(ids, pct); toast.success(`Цены изменены на ${pct}%`); onClose(); }} className="h-12 rounded-xl bg-gradient-primary font-bold text-primary-foreground">Применить</button>
-      </DialogContent>
-    </Dialog>
+    </BottomSheet>
   );
 }

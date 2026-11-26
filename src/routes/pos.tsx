@@ -8,8 +8,7 @@ import { CATEGORIES, money } from "@/lib/format";
 import { pageHead } from "@/lib/head";
 import type { Category, Payment, SaleItem } from "@/lib/types";
 import { Chips, Empty, fieldCls, Thumb } from "@/components/crm/ui";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { BottomSheet } from "@/components/crm/BottomSheet";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/pos")({
@@ -141,21 +140,16 @@ function Pos() {
           <span className="flex items-center gap-2"><ShoppingCart className="size-5" /> {count} шт</span><span>{money(total)}</span>
         </button>
       )}
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="bottom" className="h-[88dvh] rounded-t-3xl p-4">
-          <SheetHeader className="p-0 pb-3"><SheetTitle>Чек</SheetTitle></SheetHeader>
-          <div className="h-[calc(100%-3rem)]">{cartView}</div>
-        </SheetContent>
-      </Sheet>
+      <BottomSheet open={open} onClose={() => setOpen(false)} title={`Чек · ${count} шт`}>
+        <div className="h-[70dvh]">{cartView}</div>
+      </BottomSheet>
 
-      <Dialog open={!!done} onOpenChange={() => setDone(null)}>
-        <DialogContent className="max-w-xs rounded-3xl text-center">
+      <BottomSheet open={!!done} onClose={() => setDone(null)} title="Оплачено" className="items-stretch text-center">
           <div className="mx-auto flex size-16 animate-rise items-center justify-center rounded-full bg-success-soft text-success"><CheckCircle2 className="size-9" /></div>
-          <DialogTitle className="text-xl font-extrabold">Продажа №{done?.number}</DialogTitle>
+          <p className="text-lg font-bold">Продажа №{done?.number}</p>
           <p className="text-3xl font-extrabold">{money(done?.total ?? 0)}</p>
           <button onClick={() => setDone(null)} className="mt-2 h-12 rounded-xl bg-primary font-bold text-primary-foreground">Новая продажа</button>
-        </DialogContent>
-      </Dialog>
+      </BottomSheet>
     </div>
   );
 }
