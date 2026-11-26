@@ -28,3 +28,8 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Frontend-only phase: all data lives in `src/lib/store.ts` (useSyncExternalStore + localStorage), seeded from `src/lib/seed.ts`. Why: user asked for no backend yet; swap the store for Cloud later.
+- Mock auth in `src/lib/auth.ts`; `AppShell` gates every page and renders only after hydration. Why: session is in localStorage, avoids SSR mismatch.
+- Currency comes from `CURRENCY` in `src/lib/format.ts`; never hard-code it in components.
