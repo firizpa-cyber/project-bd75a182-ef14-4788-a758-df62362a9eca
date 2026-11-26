@@ -1,9 +1,11 @@
 import { useSyncExternalStore } from "react";
 import { createSeed } from "./seed";
 import { uid } from "./format";
+import { resolveProductImage } from "./product-images";
 import type { Customer, Payment, Product, SaleItem, State } from "./types";
 
-const KEY = "moysklad:data:v2";
+const KEY = "moysklad:data:v3";
+const PREVIOUS_KEY = "moysklad:data:v2";
 let state: State | null = null;
 const listeners = new Set<() => void>();
 
@@ -11,8 +13,12 @@ function get(): State {
   if (state) return state;
   if (typeof window !== "undefined") {
     try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) state = JSON.parse(raw) as State;
+      const raw = localStorage.getItem(KEY) ?? localStorage.getItem(PREVIOUS_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as State;
+        state = { ...saved, products: saved.products.map((product) => ({ ...product, image: resolveProductImage(product.image) })) };
+        localStorage.setItem(KEY, JSON.stringify(state));
+      }
     } catch {
       /* ignore */
     }
